@@ -20,3 +20,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/payment-handler', [ApiController::class,'payment_handler']);
+
+Route::get('/webhook', [ApiController::class, 'webhook']);

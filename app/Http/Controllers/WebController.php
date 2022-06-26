@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
+use Illuminate\Support\Facades\Http;
 
 class WebController extends Controller
 {
@@ -12,12 +13,27 @@ class WebController extends Controller
         return view('index');
     }
 
+    public function success(){
+        return view('success');
+    }
+
+    public function generateRandomString($length = 10) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
 
     public function payment(Request $request){
         // Set your Merchant Server Key
+        $option = $request->get('option');
+
         \Midtrans\Config::$serverKey = env('MIDTRANS_SERVER_KEY');
         // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
-        \Midtrans\Config::$isProduction = false;
+        \Midtrans\Config::$isProduction = env('environment') == "production";
         // Set sanitization on (default)
         \Midtrans\Config::$isSanitized = true;
         // Set 3DS transaction for credit card to true
@@ -31,22 +47,22 @@ class WebController extends Controller
             'item_details' => array(
                 [
                     'id' => 'a1',
-                    'price' => '30000',
+                    'price' => '100',
                     'quantity' => 1,
                     'name' => 'PhotoBooth'
                 ]
             ),
             'customer_details' => array(
-                'first_name' => $request->get('uname'),
+                'first_name' => $this->generateRandomString(10),
                 'last_name' => '',
-                'email' => $request->get('email'),
+                'email' => 'on.blurred@gmail.com',
                 'phone' => '',
             ),
         );
         
         $snapToken = \Midtrans\Snap::getSnapToken($params);
 
-        return view('payment', ['snap_token'=>$snapToken]);
+        return view('index', ['snap_token'=>$snapToken , 'option' => $option]);
 
 
     }
@@ -56,14 +72,22 @@ class WebController extends Controller
         $json = json_decode($request->get('json'));
         $order = new Order();
         $order->status = $json->transaction_status;
-        $order->uname = $request->get('uname');
-        $order->email = $request->get('email');
+        $order->uname = $json->transaction_id;
+        $order->email = 'on.blurred@gmail.com';
         $order->transaction_id = $json->transaction_id;
         $order->order_id = $json->order_id;
         $order->gross_amount = $json->gross_amount;
         $order->payment_type = $json->payment_type;
         $order->payment_code = isset($json->fraud_status) ? $json->fraud_status : null;
         $order->pdf_url = isset($json->finish_redirect_url) ? $json->finish_redirect_url : null;
-        return $order->save() ? redirect(url('/'))->with('alert-success', 'Transaksi berhasil') : redirect(url('/'))->with('alert-failed', 'Transaksi gagal!!');
+        if($order->save()) { 
+            $node_url =  env('NODE_URL');
+            $dslr_url = env('DSLR_URL');
+            Http::get($dslr_url.'/api/start?mode=print&password=pD3VOy2FfIgwyQ3Z');
+            Http::get($node_url.'/close');
+            redirect(url('/success'))->with('alert-success', 'Transaksi berhasil');
+        }else{ 
+            redirect(url('/'))->with('alert-failed', 'Transaksi gagal!!');
+        }   
     }
 }

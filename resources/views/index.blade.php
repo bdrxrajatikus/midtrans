@@ -1,26 +1,45 @@
 <html>
-    <head>
+  <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="{{url('assets/style.css')}}">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
-    </head>
-    <body>
-        <form action="/payment" method="GET">
-        <h1>Nama Pelanggan</h1>
-        <div class="formcontainer">
-        <hr/>
-        <div class="container">
-            <label for="uname"><strong>Nama</strong></label>
-            <input type="text" placeholder="Masukan Nama" name="uname" required>
-            <label for="email"><strong>Email</strong></label>
-            <input type="text" placeholder="Masukan Email" name="email" required>
-        </div>
-        <button type="submit">Lanjut</button>
-        </form>
-        @if(session('alert-success'))
-        <script>alert("{{session('alert-success')}}")</script>
-        @elseif(session('alert-failed'))
-        <script>alert("{{session('alert-failed')}}")</script>
-        @endif
-    </body>
+    <!-- @TODO: replace SET_YOUR_CLIENT_KEY_HERE with your client key -->
+    <script type="text/javascript"
+      src="https://app.midtrans.com/snap/snap.js"
+      data-client-key="SB-Mid-client-li1zewk2qrGQi19O"></script>
+    <!-- Note: replace with src="https://app.midtrans.com/snap/snap.js" for Production environment -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  </head>
+
+  <body>
+    <form action="" id="submit_form" method="POST">
+        @csrf
+        <input type="hidden" name="json" id="json_callback">
+    </form>
+    <script type="text/javascript">
+      // For example trigger on button clicked, or any time you need
+
+      window.snap.pay('{{$snap_token}}', {
+        onSuccess: function(result){
+          console.log(result);
+          send_response_to_form(result);
+        },
+        onPending: function(result){
+          console.log(result);
+          send_response_to_form(result);
+        },
+        onError: function(result){
+          console.log(result);
+          send_response_to_form(result);
+        },
+        onClose: function(){
+          alert('you closed the popup without finishing the payment');
+        }
+      })
+
+    function send_response_to_form(result){
+        document.getElementById('json_callback').value = JSON.stringify(result);
+        $('#submit_form').submit();
+    }  
+    </script>
+  </body>
 </html>
