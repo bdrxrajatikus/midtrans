@@ -104,5 +104,10 @@
   <form action="/payment" method="GET">
     <button>START NOW</button>
   </form>
+  @if(session('alert-success'))
+  <script>alert("{{session('alert-success')}}")</script>
+  @elseif(session('alert-failed'))
+  <script>alert("{{session('alert-failed')}}")</script>
+  @endif
   </body>
 </html>

@@ -80,14 +80,14 @@ class WebController extends Controller
         $order->payment_type = $json->payment_type;
         $order->payment_code = isset($json->fraud_status) ? $json->fraud_status : null;
         $order->pdf_url = isset($json->finish_redirect_url) ? $json->finish_redirect_url : null;
-        if($order->save()) { 
+        if($order->save() && $order->status == "settlement") { 
             $node_url =  env('NODE_URL');
             $dslr_url = env('DSLR_URL');
             Http::get($dslr_url.'/api/start?mode=print&password=pD3VOy2FfIgwyQ3Z');
             Http::get($node_url.'/close');
-            redirect(url('/success'))->with('alert-success', 'Transaksi berhasil');
+            return redirect(url('/success'))->with('alert-success', 'Transaksi berhasil');
         }else{ 
-            redirect(url('/'))->with('alert-failed', 'Transaksi gagal!!');
+            return redirect('/')->with('alert-failed', 'Transaksi gagal!!');
         }   
     }
 }
