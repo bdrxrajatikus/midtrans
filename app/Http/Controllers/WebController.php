@@ -62,7 +62,7 @@ class WebController extends Controller
         
         $snapToken = \Midtrans\Snap::getSnapToken($params);
 
-        return view('index', ['snap_token'=>$snapToken , 'option' => $option]);
+        return view('payment', ['snap_token'=>$snapToken , 'option' => $option]);
 
 
     }

@@ -13,6 +13,9 @@ use App\Http\Controllers\WebController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/', [WebController::class, 'payment']);
+
+
+Route::get('/', [WebController::class, 'index']);
+Route::get('/payment', [WebController::class, 'payment']);
 Route::get('/success', [WebController::class, 'success']);
-Route::post('/', [WebController::class, 'payment_post']);
+Route::post('/payment', [WebController::class, 'payment_post']);
