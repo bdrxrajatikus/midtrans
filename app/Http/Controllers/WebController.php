@@ -42,12 +42,12 @@ class WebController extends Controller
         $params = array(
             'transaction_details' => array(
                 'order_id' => rand(),
-                'gross_amount' => 10000,
+                'gross_amount' => 1,
             ),
             'item_details' => array(
                 [
                     'id' => 'a1',
-                    'price' => '100',
+                    'price' => '1',
                     'quantity' => 1,
                     'name' => 'PhotoBooth'
                 ]
