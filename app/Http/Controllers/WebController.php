@@ -19,6 +19,11 @@ class WebController extends Controller
         return view('success');
     }
 
+    public function thankyou(){
+        return view('thankyou');
+    }
+
+
     public function generateRandomString($length = 10) {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
@@ -89,20 +94,21 @@ class WebController extends Controller
         $order->payment_code = isset($json->fraud_status) ? $json->fraud_status : null;
         $order->pdf_url = isset($json->finish_redirect_url) ? $json->finish_redirect_url : null;*/
 
-        $transactionApi = env('API_URL') . '/transactions'; 
-        $response = Http::post($transactionApi, [
-            'transaction_date' => now()->toDateTimeString(),
-            'phone_number' => '-',
-            'price' => $request->masterPrice,
-            'promo_code_id' => $request->promoId != "null" ? $request->promoId : null, 
-            'final_price' =>  $json->gross_amount, 
-            'status' => $json->transaction_status
-        ]);
         if($json->transaction_status == "settlement") { 
+            $transactionApi = env('API_URL') . '/api/transactions'; 
+            $response = Http::post($transactionApi, [
+                'transaction_date' => now()->toDateTimeString(),
+                'phone_number' =>  $json->transaction_id,
+                'price' => $request->masterPrice,
+                'promo_code_id' => $request->promoId != "null" ? $request->promoId : null, 
+                'app_id' =>  $request->app_id, 
+                'final_price' =>  $json->gross_amount, 
+                'status' => $json->transaction_status
+            ]);
             $node_url =  env('NODE_URL');
             $dslr_url = env('DSLR_URL');
-            //Http::get($dslr_url.'/api/start?mode=print&password=VrSkxBCqo9WGeDR2');
-            //Http::get($node_url.'/close');
+            Http::get($dslr_url.'/api/start?mode=print&password=VrSkxBCqo9WGeDR2');
+            Http::get($node_url.'/close');
             return redirect(url('/success'))->with('alert-success', 'Transaksi berhasil');
         }else{ 
             return redirect('/')->with('alert-failed', 'Transaksi gagal!!');

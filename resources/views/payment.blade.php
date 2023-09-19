@@ -5,8 +5,8 @@
     <!-- @TODO: replace SET_YOUR_CLIENT_KEY_HERE with your client key -->
     <script type="text/javascript"
       src="https://app.midtrans.com/snap/snap.js"
-      data-client-key="SB-Mid-client-77uKEz2W2hIFMb1m"></script>
-    <!-- Note: replace with src="https://app.midtrans.com/snap/snap.js" for Production environment SB-Mid-client-li1zewk2qrGQi19O -->
+      data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}"></script>
+    <!-- Note: replace with src="https://app.midtrans.com/snap/snap.js" for Production environment  -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
   </head>
 
@@ -17,7 +17,6 @@
     </form>
     <script type="text/javascript">
       // For example trigger on button clicked, or any time you need
-
       window.snap.pay('{{$snap_token}}', {
         onSuccess: function(result){
           console.log(result);

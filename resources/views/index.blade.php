@@ -39,6 +39,8 @@
         <!-- Core theme JS-->
         <script src="js/scripts.js"></script>
         <script>
+            const api_url ="{{ env('API_URL') }}";
+            const appId ="{{ env('APP_ID') }}";
             function formatRupiah(angka, prefix){
                 var number_string = angka.replace(/[^,\d]/g, '').toString(),
                 split   		= number_string.split(','),
@@ -56,7 +58,8 @@
                 return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
             }
             // Fungsi untuk menampilkan modal SweetAlert2 saat tombol diklik
-            let masterPrice = 25000;
+            let masterPrice = 1000000;
+            
             $("#fixedPrice").text(formatRupiah(masterPrice.toString(), 'Rp'));
             let default_promo_code = ""
             let default_promo_id = null
@@ -69,7 +72,7 @@
                     confirmButtonText: 'Apply',
                     preConfirm: () => {
                         const promoCode = document.getElementById('promoCode').value;
-                        return fetch(`http://localhost:8000/api/vouchers/check/${promoCode}`)
+                        return fetch(`${api_url}/api/vouchers/check/${promoCode}?app_id=${appId}`)
                             .then(response => response.json())
                             .then(data => {
                                 if (data.success) {
@@ -102,11 +105,11 @@
                 });
             });
             $("#startAndPay").click(function(){
-                window.location.href = `/payment?price=${fixedPrice}&masterPrice=${masterPrice}&promoId=${default_promo_id}`
+                window.location.href = `/payment?price=${fixedPrice}&masterPrice=${masterPrice}&promoId=${default_promo_id}&app_id=${appId}`
             });
             
             function fetchSettings() {
-                fetch('http://localhost:8000/api/settings')
+                fetch(`${api_url}/api/settings/${appId}`)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Terjadi kesalahan saat memuat data.');
@@ -114,12 +117,11 @@
                         return response.json();
                     })
                     .then(data => {
-                        masterPrice = parseFloat(data?.[0]?.master_price) ?? 25000
+                        masterPrice = parseFloat(data?.master_price) ?? 25000
                         fixedPrice = masterPrice;
                         $("#fixedPrice").text(formatRupiah(masterPrice.toString(), 'Rp'));
                         var masthead = document.querySelector('.masthead');
-                        let imageUrl = 'http://localhost:8000/images/' + data?.[0]?.homepage_image;
-                        console.log(imageUrl)
+                        let imageUrl = `${api_url}/images/` + data?.homepage_image;
                         masthead.style.backgroundImage = 'linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.1) 100%), url("' + imageUrl + '")';
                     })
                     .catch(error => {
