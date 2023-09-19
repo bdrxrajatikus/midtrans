@@ -17,5 +17,6 @@ use App\Http\Controllers\WebController;
 
 Route::get('/', [WebController::class, 'index']);
 Route::get('/payment', [WebController::class, 'payment']);
+Route::get('/payment_test', [WebController::class, 'payment_test']);
 Route::get('/success', [WebController::class, 'success']);
 Route::post('/payment', [WebController::class, 'payment_post']);

@@ -23,9 +23,10 @@
             <div class="container px-4 px-lg-5 text-center">
                 <h1 class="mb-1">WELCOME TO BLURRED</h1>
                 <h3 class="mb-5"><em>Let's Start Take A Photo!</em></h3>
-                <h4 class="mb-1 text-danger text-decoration-line-through">IDR48.000</h4>
-                <h2 class="mb-5">IDR28.000</h2>
-                <a class="btn btn-primary btn-xl" href="/payment" style="font-size:35px;">START & PAY</a>
+                <h4 class="mb-1 text-danger text-decoration-line-through" id="masterPrice"></h4>
+                <h2 class="mb-1" id="fixedPrice"></h2>
+                <h5 class="mb-5 text-success" id="promoCodeUsed"></h5>
+                <a class="btn btn-primary btn-xl" id="startAndPay" style="font-size:35px;">START & PAY</a>
                 <p class="modal-voucher text-danger mt-3" href="#" style="font-weight: bold;font-size:20px;cursor:pointer;">Apply Promo Code</p>
             </div>
         </header>
@@ -38,20 +39,58 @@
         <!-- Core theme JS-->
         <script src="js/scripts.js"></script>
         <script>
+            function formatRupiah(angka, prefix){
+                var number_string = angka.replace(/[^,\d]/g, '').toString(),
+                split   		= number_string.split(','),
+                sisa     		= split[0].length % 3,
+                rupiah     		= split[0].substr(0, sisa),
+                ribuan     		= split[0].substr(sisa).match(/\d{3}/gi);
+    
+                // tambahkan titik jika yang di input sudah menjadi angka ribuan
+                if(ribuan){
+                    separator = sisa ? '.' : '';
+                    rupiah += separator + ribuan.join('.');
+                }
+    
+                rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+                return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+            }
             // Fungsi untuk menampilkan modal SweetAlert2 saat tombol diklik
+            let masterPrice = 25000;
+            $("#fixedPrice").text(formatRupiah(masterPrice.toString(), 'Rp'));
+            let default_promo_code = ""
+            let default_promo_id = null
+            let fixedPrice = masterPrice;
             document.querySelector('.modal-voucher').addEventListener('click', function () {
                 Swal.fire({
                     title: 'Apply Promo Code',
-                    html: '<input id="promoCode" class="swal2-input" placeholder="Masukkan Kode Promo">',
+                    html: `<input id="promoCode" class="swal2-input" placeholder="Masukkan Kode Promo" value="${default_promo_code}">`,
                     showCancelButton: true,
                     confirmButtonText: 'Apply',
                     preConfirm: () => {
                         const promoCode = document.getElementById('promoCode').value;
-                        return fetch(`http://cek-harga.com/api/price?promo=${promoCode}`)
+                        return fetch(`http://localhost:8000/api/vouchers/check/${promoCode}`)
                             .then(response => response.json())
                             .then(data => {
                                 if (data.success) {
-                                    Swal.fire('Sukses', `Harga sekarang: ${data.price}`, 'success');
+                                    const { id, amount, qty, usage, is_percentage, promo_name, promo_code } = data.data
+                                    if (usage >= qty) {
+                                        Swal.fire('Gagal', 'Kode Promo Ini Sudah Tidak Valid', 'error');
+                                    } else { 
+                                        if(is_percentage) {
+                                            let discountPrice = (masterPrice * amount) / 100;
+                                            fixedPrice = masterPrice - discountPrice;
+                                        } else { 
+                                            fixedPrice = masterPrice - amount;
+                                        }
+                                        $("#masterPrice").text(formatRupiah(masterPrice.toString(), 'Rp'));
+                                        $("#fixedPrice").text(formatRupiah(fixedPrice.toString(), 'Rp'));
+                                        $("#promoCodeUsed").text(`(${promo_code})`)
+                                        default_promo_code = promo_code;
+                                        default_promo_id = id;
+
+                                        Swal.fire('Sukses', `Harga sekarang: ${formatRupiah(fixedPrice.toString())}`, 'success');
+                                    }
                                 } else {
                                     Swal.fire('Gagal', 'Kode promo tidak valid', 'error');
                                 }
@@ -61,6 +100,34 @@
                             });
                     }
                 });
+            });
+            $("#startAndPay").click(function(){
+                window.location.href = `/payment?price=${fixedPrice}&masterPrice=${masterPrice}&promoId=${default_promo_id}`
+            });
+            
+            function fetchSettings() {
+                fetch('http://localhost:8000/api/settings')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Terjadi kesalahan saat memuat data.');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        masterPrice = parseFloat(data?.[0]?.master_price) ?? 25000
+                        fixedPrice = masterPrice;
+                        $("#fixedPrice").text(formatRupiah(masterPrice.toString(), 'Rp'));
+                        var masthead = document.querySelector('.masthead');
+                        let imageUrl = 'http://localhost:8000/images/' + data?.[0]?.homepage_image;
+                        console.log(imageUrl)
+                        masthead.style.backgroundImage = 'linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.1) 100%), url("' + imageUrl + '")';
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            }
+            $(document).ready(function() {
+                fetchSettings()
             });
         </script>
         
