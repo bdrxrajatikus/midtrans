@@ -1,37 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>BLURRED</title>
-        <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-        <!-- Font Awesome icons (free version)-->
-        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-        <!-- Simple line icons-->
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.5.5/css/simple-line-icons.min.css" rel="stylesheet" />
-        <!-- Google fonts-->
-        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css" />
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="css/styles.css" rel="stylesheet" />
-    </head>
 
-    <body id="page-top">
-        <header class="masthead d-flex align-items-center">
-            <div class="container px-4 px-lg-5 text-center">
-                <h1 class="mb-1">WELCOME TO BLURRED</h1>
-                <h3 class="mb-5"><em>Let's Start Take A Photo!</em></h3>
-                <h4 class="mb-1 text-danger text-decoration-line-through" id="masterPrice"></h4>
-                <h2 class="mb-1" id="fixedPrice"></h2>
-                <h5 class="mb-5 text-success" id="promoCodeUsed"></h5>
-                <a class="btn btn-primary btn-xl" id="startAndPay" style="font-size:35px;">START & PAY</a>
-                <p class="modal-voucher text-danger mt-3" href="#" style="font-weight: bold;font-size:20px;cursor:pointer;">Apply Promo Code</p>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>BLURRED</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Simple line icons-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.5.5/css/simple-line-icons.min.css" rel="stylesheet" />
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="css/styles.css" rel="stylesheet" />
+    <style>
+       
+        #videoElement {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body id="page-top">
+    <!-- Tab section -->
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Left Tabs -->
+            <div class="col-md-3">
+                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    <a class="nav-link active" id="v-pills-payment-tab" data-bs-toggle="pill" href="#v-pills-payment" role="tab" aria-controls="v-pills-payment" aria-selected="true">Payment</a>
+                    <a class="nav-link" id="v-pills-frame-tab" data-bs-toggle="pill" href="#v-pills-frame" role="tab" aria-controls="v-pills-how-to-use" aria-selected="false">Frame</a>
+                    <a class="nav-link" id="v-pills-how-to-use-tab" data-bs-toggle="pill" href="#v-pills-how-to-use" role="tab" aria-controls="v-pills-how-to-use" aria-selected="false">How To Use</a>
+                    <a class="nav-link" id="v-pills-contact-us-tab" data-bs-toggle="pill" href="#v-pills-contact-us" role="tab" aria-controls="v-pills-contact-us" aria-selected="false">Contact Us</a>
+                    <div class="mt-5"></div>
+                    <a class="nav-link" id="v-pills-test-camera-tab" data-bs-toggle="pill" href="#v-pills-test-camera" role="tab" aria-controls="v-pills-test-camera" aria-selected="false">Test Camera</a>
+                </div>
             </div>
-        </header>
-        <!-- Scroll to Top Button-->
-        <a class="scroll-to-top rounded" href="#page-top"><i class="fas fa-angle-up"></i></a>
+
+            <!-- Right Tab -->
+            <div class="col-md-9">
+                <div class="tab-content" id="v-pills-tabContent">
+                    <div class="tab-pane fade show active" id="v-pills-payment" role="tabpanel" aria-labelledby="v-pills-payment-tab">
+                        <header class="masthead d-flex align-items-center" id="paymentPage">
+                            <div class="container px-4 px-lg-5 text-center">
+                                <h4 class="mb-1 text-danger text-decoration-line-through" id="masterPrice"></h4>
+                                <h2 class="mb-1" id="fixedPrice"></h2>
+                                <h5 class="mb-5 text-success" id="promoCodeUsed"></h5>
+                                <a class="btn btn-primary btn-xl" id="startAndPay" style="font-size:35px;">START & PAY</a>
+                                <p class="modal-voucher text-danger mt-3" href="#" style="font-weight: bold;font-size:20px;cursor:pointer;">Apply Promo Code</p>
+                            </div>
+                        </header>
+                    </div>
+                    <div class="tab-pane fade" id="v-pills-frame" role="tabpanel" aria-labelledby="v-pills-frame-tab">
+                        <header class="masthead d-flex align-items-center" id="frame">
+                            <div class="container px-4 px-lg-5 text-center">
+                            </div>
+                        </header>
+                    </div>
+                    <div class="tab-pane fade" id="v-pills-how-to-use" role="tabpanel" aria-labelledby="v-pills-how-to-use-tab">
+                        <header class="masthead d-flex align-items-center" id="howToUse">
+                            <div class="container px-4 px-lg-5 text-center">
+                            </div>
+                        </header>
+                    </div>
+                    <div class="tab-pane fade" id="v-pills-contact-us" role="tabpanel" aria-labelledby="v-pills-contact-us-tab">
+                        <header class="masthead d-flex align-items-center" id="contact">
+                            <div class="container px-4 px-lg-5 text-center">
+                            </div>
+                        </header>
+                    </div>
+                    <div class="tab-pane fade" id="v-pills-test-camera" role="tabpanel" aria-labelledby="v-pills-test-camera">
+                        <header class="masthead d-flex align-items-center" id="test-camera">
+                            <video id="videoElement" autoplay></video>
+                        </header>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -63,7 +116,7 @@
             $("#fixedPrice").text(formatRupiah(masterPrice.toString(), 'Rp'));
             let default_promo_code = ""
             let default_promo_id = null
-            let fixedPrice = masterPrice;
+            let fixedPrice = parseInt(masterPrice);
             document.querySelector('.modal-voucher').addEventListener('click', function () {
                 Swal.fire({
                     title: 'Apply Promo Code',
@@ -77,14 +130,14 @@
                             .then(data => {
                                 if (data.success) {
                                     const { id, amount, qty, usage, is_percentage, promo_name, promo_code } = data.data
-                                    if (usage >= qty) {
+                                    if (parseInt(usage) >= parseInt(qty)) {
                                         Swal.fire('Gagal', 'Kode Promo Ini Sudah Tidak Valid', 'error');
                                     } else { 
-                                        if(is_percentage) {
-                                            let discountPrice = (masterPrice * amount) / 100;
-                                            fixedPrice = masterPrice - discountPrice;
+                                        if(parseInt(is_percentage) == 1) {
+                                            let discountPrice = (parseInt(masterPrice) * parseInt(amount)) / 100;
+                                            fixedPrice = parseInt(masterPrice) - parseInt(discountPrice);
                                         } else { 
-                                            fixedPrice = masterPrice - amount;
+                                            fixedPrice = parseInt(masterPrice) - parseInt(amount);
                                         }
                                         $("#masterPrice").text(formatRupiah(masterPrice.toString(), 'Rp'));
                                         $("#fixedPrice").text(formatRupiah(fixedPrice.toString(), 'Rp'));
@@ -120,9 +173,29 @@
                         masterPrice = parseFloat(data?.master_price) ?? 25000
                         fixedPrice = masterPrice;
                         $("#fixedPrice").text(formatRupiah(masterPrice.toString(), 'Rp'));
-                        var masthead = document.querySelector('.masthead');
+                        var paymentPage = document.querySelector('#paymentPage');
+                        
+                        let paymentImage, frameImage, howToUseImage, contactImage;
+
+                        for (let i = 0; i < data.templates.length; i++) {
+                            if (data.templates[i].type === "payment") {
+                                paymentImage = `${api_url}/images/` + data.templates[i].image;
+                            } else if (data.templates[i].type === "frame") {
+                                frameImage = `${api_url}/images/` + data.templates[i].image;
+                            } else if (data.templates[i].type === "how_to_use") {
+                                howToUseImage = `${api_url}/images/` + data.templates[i].image;
+                            } else if (data.templates[i].type === "contact") {
+                                contactImage =`${api_url}/images/` +  data.templates[i].image;
+                            }
+                        }
                         let imageUrl = `${api_url}/images/` + data?.homepage_image;
-                        masthead.style.backgroundImage = 'linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.1) 100%), url("' + imageUrl + '")';
+                        paymentPage.style.backgroundImage = 'linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.1) 100%), url("' + paymentImage + '")';
+                        var howTouse = document.querySelector('#howToUse');
+                        howTouse.style.backgroundImage = 'linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.1) 100%), url("' + howToUseImage + '")';
+                        var frame = document.querySelector('#frame');
+                        frame.style.backgroundImage = 'linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.1) 100%), url("' + frameImage + '")';
+                        var contact = document.querySelector('#contact');
+                        contact.style.backgroundImage = 'linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.1) 100%), url("' + contactImage + '")';
                     })
                     .catch(error => {
                         console.error('Error:', error);
@@ -131,6 +204,21 @@
             $(document).ready(function() {
                 fetchSettings()
             });
+        </script>
+        <script>
+            // Menangkap elemen video
+            var video = document.querySelector("#videoElement");
+    
+            // Mencoba mendapatkan akses kamera pengguna
+            if (navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(function (stream) {
+                        video.srcObject = stream;
+                    })
+                    .catch(function (err0r) {
+                        console.log("Something went wrong!");
+                    });
+            }
         </script>
         
     </body>

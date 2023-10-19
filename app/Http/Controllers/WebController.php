@@ -107,7 +107,8 @@ class WebController extends Controller
             ]);
             $node_url =  env('NODE_URL');
             $dslr_url = env('DSLR_URL');
-            Http::get($dslr_url.'/api/start?mode=print&password=VrSkxBCqo9WGeDR2');
+            $dslr_password = env('DSLR_PASSWORD');
+            Http::get($dslr_url.'/api/start?mode=print&password='.$dslr_password);
             Http::get($node_url.'/close');
             return redirect(url('/success'))->with('alert-success', 'Transaksi berhasil');
         }else{ 
