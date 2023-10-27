@@ -18,11 +18,36 @@
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="css/styles.css" rel="stylesheet" />
     <style>
-       
-        #videoElement {
+        /* Ganti ukuran dan posisi dari left tab */
+        .col-md-3 {
             position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: 100%;
+            z-index: 1000;
+            background-color: rgba(255, 255, 255, 0.5); /* Atur ke transparan */
+        }
+
+        .nav.flex-column {
+            flex-direction: row;
+            justify-content: space-around;
+            align-items: center;
+            height: 100px; /* Atur tinggi sesuai kebutuhan */
+        }
+
+        .nav-link {
+            padding: 10px 20px;
+            margin: 5px;
+        }
+
+        /* Sesuaikan warna dan gaya menu Anda */
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Atur agar konten di kanan tampil di bawah menu */
+        .col-md-9 {
+            margin-left: 0%; /* Atur margin kiri sesuai dengan lebar left tab */
         }
     </style>
 </head>
@@ -44,16 +69,16 @@
             </div>
 
             <!-- Right Tab -->
-            <div class="col-md-9">
+            <div class="col-md-12">
                 <div class="tab-content" id="v-pills-tabContent">
                     <div class="tab-pane fade show active" id="v-pills-payment" role="tabpanel" aria-labelledby="v-pills-payment-tab">
                         <header class="masthead d-flex align-items-center" id="paymentPage">
-                            <div class="container px-4 px-lg-5 text-center">
+                            <div class="container px-4 px-lg-5 text-center" style="margin-top:180px;">
                                 <h4 class="mb-1 text-danger text-decoration-line-through" id="masterPrice"></h4>
                                 <h2 class="mb-1" id="fixedPrice"></h2>
                                 <h5 class="mb-5 text-success" id="promoCodeUsed"></h5>
                                 <a class="btn btn-primary btn-xl" id="startAndPay" style="font-size:35px;">START & PAY</a>
-                                <p class="modal-voucher text-danger mt-3" href="#" style="font-weight: bold;font-size:20px;cursor:pointer;">Apply Promo Code</p>
+                                <p class="modal-voucher mt-3" href="#" style="font-weight: bold;font-size:20px;cursor:pointer;color:blue">Apply Promo Code</p>
                             </div>
                         </header>
                     </div>
@@ -77,7 +102,7 @@
                     </div>
                     <div class="tab-pane fade" id="v-pills-test-camera" role="tabpanel" aria-labelledby="v-pills-test-camera">
                         <header class="masthead d-flex align-items-center" id="test-camera">
-                            <video id="videoElement" autoplay></video>
+                            <video id="videoElement" autoplay style="width: 100%"></video>
                         </header>
                     </div>
                 </div>
@@ -178,13 +203,13 @@
                         let paymentImage, frameImage, howToUseImage, contactImage;
 
                         for (let i = 0; i < data.templates.length; i++) {
-                            if (data.templates[i].type === "payment") {
+                            if (data.templates[i].TYPE === "payment") {
                                 paymentImage = `${api_url}/images/` + data.templates[i].image;
-                            } else if (data.templates[i].type === "frame") {
+                            } else if (data.templates[i].TYPE === "frame") {
                                 frameImage = `${api_url}/images/` + data.templates[i].image;
-                            } else if (data.templates[i].type === "how_to_use") {
+                            } else if (data.templates[i].TYPE === "how_to_use") {
                                 howToUseImage = `${api_url}/images/` + data.templates[i].image;
-                            } else if (data.templates[i].type === "contact") {
+                            } else if (data.templates[i].TYPE === "contact") {
                                 contactImage =`${api_url}/images/` +  data.templates[i].image;
                             }
                         }
