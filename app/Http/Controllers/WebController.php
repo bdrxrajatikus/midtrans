@@ -79,6 +79,30 @@ class WebController extends Controller
         var_dump($promo_code);
     }
 
+    public function payment_voucher(Request $request){
+        if($request->price <= 0) { 
+            $transactionApi = env('API_URL') . '/api/transactions'; 
+            $response = Http::post($transactionApi, [
+                'transaction_date' => now()->toDateTimeString(),
+                'phone_number' =>  '00000',
+                'price' => $request->masterPrice,
+                'promo_code_id' => $request->promoId != "null" ? $request->promoId : null, 
+                'app_id' =>  $request->app_id, 
+                'final_price' =>  0, 
+                'status' => "settlement"
+            ]);
+            $node_url =  env('NODE_URL');
+            $dslr_url = env('DSLR_URL');
+            
+            $dslr_password = env('DSLR_PASSWORD');
+            Http::get($dslr_url.'/api/start?mode=print&password='.$dslr_password);
+            Http::get($node_url.'/close');
+            return redirect(url('/success'))->with('alert-success', 'Transaksi berhasil');
+        }else{ 
+            return redirect('/')->with('alert-failed', 'Transaksi gagal!!');
+        }   
+    }
+
 
     public function payment_post(Request $request){
         // return $request;

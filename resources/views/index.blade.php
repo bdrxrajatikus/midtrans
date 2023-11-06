@@ -183,7 +183,11 @@
                 });
             });
             $("#startAndPay").click(function(){
-                window.location.href = `/payment?price=${fixedPrice}&masterPrice=${masterPrice}&promoId=${default_promo_id}&app_id=${appId}`
+                let url = `/payment?price=${fixedPrice}&masterPrice=${masterPrice}&promoId=${default_promo_id}&app_id=${appId}`
+                if(fixedPrice <= 0){
+                    url = `/payment_voucher?price=${fixedPrice}&masterPrice=${masterPrice}&promoId=${default_promo_id}&app_id=${appId}`
+                }
+                window.location.href = url;
             });
             
             function fetchSettings() {
